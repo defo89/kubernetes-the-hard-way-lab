@@ -1,5 +1,7 @@
 # Deploying the DNS Cluster Add-on
 
+Multiple examples, I went with [coredns](https://www.coredns.io).
+
 ## CoreDNS
 
 CoreDNS is configured through a Corefile, and in Kubernetes, ConfigMap is used.

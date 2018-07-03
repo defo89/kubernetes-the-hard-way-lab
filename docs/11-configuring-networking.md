@@ -1,5 +1,7 @@
 # Configure Kubernetes Networking
 
+Multiple examples, I went with [Weave Net](https://www.weave.works/docs/net/latest/overview/features/).
+
 ## Configure Kubernetes Networking - Calico
 
 Run from admin machine.

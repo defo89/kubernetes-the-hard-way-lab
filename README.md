@@ -22,9 +22,32 @@
 | 10.98.96.1 | k8s API server (internal IP) |
 | 10.98.96.10	| k8s DNS |
 
+## Building Blocks
+
 Setup that worked in my environment:
 - Operating System: Ubuntu 18.04 LTS (VMs on top of VMware ESXi)
 - Networking solution: Weave Net
 - DNS Add-on - coredns
 
-Gotchas:
+## Labs
+
+* [Infrastructure Setup](docs/01-infrastructure-setup.md)
+* [Installing the Client Tools](docs/02-client-tools.md)
+* [Provisioning a CA and Generating TLS Certificates](docs/03-certificate-authority.md)
+* [Kubernetes Configuration Files for Authentication](docs/04-kubernetes-configuration-files.md)
+* [Generating the Data Encryption Config and Key](docs/05-data-encryption-keys.md)
+* [Bootstrapping the etcd Cluster](docs/06-bootstrapping-etcd.md)
+* [Load Balancer](docs/07-kubernetes-api-lb.md)
+* [Bootstrapping the Kubernetes Control Plane](docs/08-bootstrapping-kubernetes-controllers.md)
+* [Bootstrapping the Kubernetes Worker Nodes](docs/09-bootstrapping-kubernetes-workers.md)
+* [Configuring kubectl for Remote Access](docs/10-configuring-kubectl.md)
+* [Configure Kubernetes Networking](docs/11-configuring-networking.md)
+* [Deploying the DNS Cluster Add-on](docs/12-dns-addon.md)
+* [Testing and Playing with Kubernetes](docs/13-playing-with-k8s.md)
+* [Verification and Troubleshooting](docs/98-commands.md)
+* [Notes from Troubleshooting and Operations](docs/99-scenario-notes.md)
+
+## Credits
+
+* [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+* [ON-PREM K8S](https://blog.csnet.me/k8s-thw/)

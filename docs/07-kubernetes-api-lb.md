@@ -1,4 +1,4 @@
-# LOAD BALANCER
+# Load Balancer
 
 ## Install HAProxy
 

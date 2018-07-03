@@ -18,8 +18,8 @@
 | 10.98.95.0/24 | LAN (technoff.eu) |
 | 10.98.100.0/22 | k8s Pod network |
 | 10.98.96.0/24 | k8s Service network |
-| 10.98.95.18 | k8s API server (external) |
-| 10.98.96.1 | k8s API server (internal) |
+| 10.98.95.18 | k8s API server (external IP - haproxy) |
+| 10.98.96.1 | k8s API server (internal IP) |
 | 10.98.96.10	| k8s DNS |
 
 Setup that worked in my environment:

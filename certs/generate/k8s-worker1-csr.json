@@ -1,0 +1,15 @@
+{
+  "CN": "system:node:k8s-worker1",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "LV",
+      "L": "Daugavpils",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Hard Way"
+    }
+  ]
+}

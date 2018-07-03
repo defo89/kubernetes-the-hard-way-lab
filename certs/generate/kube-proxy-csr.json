@@ -1,0 +1,15 @@
+{
+  "CN": "system:kube-proxy",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "LV",
+      "L": "Daugavpils",
+      "O": "system:node-proxier",
+      "OU": "Kubernetes The Hard Way"
+    }
+  ]
+}

@@ -134,3 +134,5 @@ In case of changing the solution on Worker node
 sudo rm -f /etc/cni/net.d/*
 sudo shutdown -r now
 ```
+
+after this can `kubectl apply` the new solution.

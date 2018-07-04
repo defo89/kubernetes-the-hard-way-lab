@@ -49,3 +49,52 @@ helm install coreos/kube-prometheus --name kube-prometheus --set global.rbacEnab
 ```
 kubectl get pods  -n monitoring
 ```
+
+## MetalLB for Load Balancing
+
+### Installation
+
+```
+kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.6.2/manifests/metallb.yaml
+```
+
+Output
+
+```
+namespace "metallb-system" created
+serviceaccount "controller" created
+serviceaccount "speaker" created
+clusterrole "metallb-system:controller" created
+clusterrole "metallb-system:speaker" created
+role "leader-election" created
+role "config-watcher" created
+clusterrolebinding "metallb-system:controller" created
+clusterrolebinding "metallb-system:speaker" created
+rolebinding "config-watcher" created
+rolebinding "leader-election" created
+daemonset "speaker" created
+deployment "controller" created
+```
+
+### Configuration
+
+```
+kubectl apply -f metallb-config.yml
+```
+
+### Verification
+
+```
+kubectl get pods  -n metallb-system
+```
+
+Output
+
+```
+> kubectl get pods  -n metallb-system
+NAME                          READY     STATUS    RESTARTS   AGE
+controller-58b7d685df-6d2q9   1/1       Running   0          3m
+speaker-6dr7k                 1/1       Running   0          3m
+speaker-jcgpt                 1/1       Running   0          3m
+speaker-tg6lp                 1/1       Running   0          3m
+```

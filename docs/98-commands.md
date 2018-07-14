@@ -65,6 +65,12 @@ calico-node-vx9h9          0/2       Blocked   0          55m
 coredns-75b467dc56-cxj7b   0/1       Pending   0          12m
 coredns-75b467dc56-rg5t9   0/1       Pending   0          12m
 
+> kubectl get pod -l app=my-nginx
+NAME                                READY     STATUS    RESTARTS   AGE
+nginx-deployment-649d67c46d-8nrp5   1/1       Running   0          13m
+nginx-deployment-649d67c46d-gsz5x   1/1       Running   0          13m
+nginx-deployment-649d67c46d-x5c44   1/1       Running   0          13m
+
 > kubectl get pod --namespace kube-public
 No resources found.
 

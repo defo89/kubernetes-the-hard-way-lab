@@ -27,6 +27,29 @@ Generate a kubeconfig file suitable for authenticating as the admin user
 }
 ```
 
+```
+> kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: REDACTED
+    server: https://10.98.95.18:6443
+  name: kubernetes-the-hard-way
+contexts:
+- context:
+    cluster: kubernetes-the-hard-way
+    user: admin
+  name: kubernetes-the-hard-way
+current-context: kubernetes-the-hard-way
+kind: Config
+preferences: {}
+users:
+- name: admin
+  user:
+    client-certificate: /Users/me/kubernetes-the-hard-way-lab/certs/admin.pem
+    client-key: /Users/me/kubernetes-the-hard-way-lab/certs/admin-key.pem
+```
+
 Note for me
 
 ```

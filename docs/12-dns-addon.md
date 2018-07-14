@@ -9,7 +9,7 @@ CoreDNS is configured through a Corefile, and in Kubernetes, ConfigMap is used.
 ### Apply CoreDNS ConfigMap
 
 ```
-kubectl apply -f coredns/coredns.yaml
+kubectl apply -f manifests/coredns.yaml
 ```
 
 Output
@@ -32,7 +32,7 @@ kubectl get pod --all-namespaces -l k8s-app=coredns -o wide
 Deploy the kube-dns cluster add-on
 
 ```
-kubectl create -f kube-dns/kube-dns.yaml
+kubectl create -f manifests/kube-dns.yaml
 ```
 
 Output

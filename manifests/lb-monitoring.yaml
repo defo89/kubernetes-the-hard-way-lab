@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-grafana
+  labels:
+    environment: dev
+    owner: defo
+    app: grafana
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: kube-prometheus-grafana
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-prometheus
+  labels:
+    environment: dev
+    owner: defo
+    app: prometheus
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 9090
+  selector:
+    app: prometheus
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lb-alertmanager
+  labels:
+    environment: dev
+    owner: defo
+    app: alertmanager
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 9093
+  selector:
+    app: alertmanager
+  type: LoadBalancer

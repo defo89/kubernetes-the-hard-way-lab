@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-nginx
+  name: nginx
   labels:
-    run: my-nginx
+    environment: dev
+    owner: defo
   annotations:
     metallb.universe.tf/address-pool: default
 spec:
@@ -30,7 +31,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.7.9
+        image: nginx:1.14
         ports:
         - containerPort: 80
 

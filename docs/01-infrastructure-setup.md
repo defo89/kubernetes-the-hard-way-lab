@@ -5,7 +5,9 @@
 
 ```
 sudo apt-get install isc-dhcp-server
+```
 
+```
 --> /etc/dhcp/dhcpd.conf
 
 # common options
@@ -28,6 +30,11 @@ subnet 10.98.95.0 netmask 255.255.255.0 {
 host haproxy1 {
   hardware ethernet 00:0c:29:4b:97:87;
   fixed-address 10.98.95.18;
+}
+
+host media {
+  hardware ethernet 00:0c:29:3c:ce:53;
+  fixed-address 10.98.95.231;
 }
 
 host k8s-controller1 {
@@ -148,6 +155,7 @@ k8s-worker1.technoff.eu.                IN      A      10.98.95.21
 k8s-worker2.technoff.eu.                IN      A      10.98.95.22
 k8s-worker3.technoff.eu.                IN      A      10.98.95.23
 k8s-api.technoff.eu.                    IN      A      10.98.95.18
+media.technoff.eu.                      IN      A      10.98.95.231
 ```
 
 Reverse zone file - define DNS PTR records for reverse DNS lookups (IP to DNS name).
@@ -173,6 +181,7 @@ $TTL    604800
 22              IN      PTR     k8s-worker2.technoff.eu.        ; 10.98.95.22
 23              IN      PTR     k8s-worker3.technoff.eu.        ; 10.98.95.23
 18              IN      PTR     k8s-api.technoff.eu.            ; 10.98.95.18
+231             IN      PTR     media.technoff.eu.              ; 10.98.95.231
 ```
 
 Start bind9 and enable it at startup.
@@ -180,4 +189,137 @@ Start bind9 and enable it at startup.
 ```
 systemctl enable bind9
 systemctl start bind9
+```
+
+## Set up NFS server
+
+View storage devices.
+
+```
+> lsblk 
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+loop0    7:0    0 86.6M  1 loop /snap/core/4486
+sda      8:0    0    3G  0 disk 
+├─sda1   8:1    0    1M  0 part 
+└─sda2   8:2    0    3G  0 part /
+sdb      8:16   0   40G  0 disk 
+sr0     11:0    1 1024M  0 rom  
+```
+
+Confirm next partition number to use.
+
+```
+> sudo gdisk -l /dev/sda
+GPT fdisk (gdisk) version 1.0.3
+
+Problem opening /dev/sdab for reading! Error is 2.
+The specified file does not exist!
+defo@media:~$ sudo gdisk -l /dev/sda 
+GPT fdisk (gdisk) version 1.0.3
+
+Partition table scan:
+  MBR: protective
+  BSD: not present
+  APM: not present
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+Disk /dev/sda: 6291456 sectors, 3.0 GiB
+Model: Virtual disk    
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): 304C050B-5B24-4A9E-AAEA-E53C45DDCFF0
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 6291422
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 4029 sectors (2.0 MiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048            4095   1024.0 KiB  EF02  
+   2            4096         6289407   3.0 GiB     8300  
+```
+
+Create partition on a disk dedicated for NFS sharing.
+
+```
+> sudo gdisk /dev/sdb
+GPT fdisk (gdisk) version 1.0.3
+
+Partition table scan:
+  MBR: not present
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+Creating new GPT entries.
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-83886046, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-83886046, default = 83886046) or {+-}size{KMGTP}: 
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): 8300
+Changed type of partition to 'Linux filesystem'
+
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to /dev/sdb.
+The operation has completed successfully.
+```
+
+Create filesystem on a partition.
+
+```
+> sudo mkfs.ext4 -L nfs /dev/sdb1
+
+mke2fs 1.44.1 (24-Mar-2018)
+Discarding device blocks: failed - Remote I/O error
+Creating filesystem with 10485499 4k blocks and 2621440 inodes
+Filesystem UUID: 0968159a-720b-4a5c-9d76-1559e2acf2ad
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (65536 blocks): done
+Writing superblocks and filesystem accounting information: done
+```
+
+Mount partition on startup.
+
+```
+> sudo mkdir /mnt/nfs
+> blkid
+/dev/sda2: UUID="41de22aa-88eb-11e8-8ae2-000c293cce53" TYPE="ext4" PARTUUID="18878d4a-2df5-4d3c-9efc-c44bee6aee5d"
+/dev/sdb1: LABEL="nfs" UUID="0968159a-720b-4a5c-9d76-1559e2acf2ad" TYPE="ext4" PARTLABEL="Linux filesystem" PARTUUID="4631e537-9db0-4079-8a44-382ac6fce7ef"
+
+--> sudo vim /etc/fstab
+UUID=41de22aa-88eb-11e8-8ae2-000c293cce53 / ext4 defaults 0 0
+UUID=0968159a-720b-4a5c-9d76-1559e2acf2ad / ext4 defaults 0 1
+
+```
+
+Install and configure NFS.
+
+```
+sudo apt-get install -y nfs-kernel-server
+```
+
+Create a share for the first Persistent Volume.
+
+```
+> sudo mkdir /mnt/nfs/pv0001
+
+--> /etc/exports
+/mnt/nfs/pv0001        10.98.95.0/24(rw,root_squash,no_wdelay,no_subtree_check)
+```
+
+```
+sudo systemctl start nfs-kernel-server
+sudo systemctl enable nfs-kernel-server
 ```

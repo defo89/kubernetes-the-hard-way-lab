@@ -4,6 +4,7 @@
 | Name | IP address | Role |
 | ---|---|---|
 | networker	| 10.98.95.230 | DHCP and DNS server |
+| media	| 10.98.95.231 | NFS server |
 | haproxy1	| 10.98.95.18 | Load Balancer for k8s API |
 | k8s-controller1 | 10.98.95.11 | controller node |
 | k8s-controller2 | 10.98.95.12 | controller node |

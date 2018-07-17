@@ -1,4 +1,4 @@
-# Kubernetes The Hard Way in Lab (Bare Metal)
+# Kubernetes The Hard Way in Lab (on VMware ESXi)
 
 ## Design
 | Name | IP address | Role |

@@ -44,7 +44,8 @@ Setup that worked in my environment:
 * [Configuring kubectl for Remote Access](docs/10-configuring-kubectl.md)
 * [Configure Kubernetes Networking](docs/11-configuring-networking.md)
 * [Deploying the DNS Cluster Add-on](docs/12-dns-addon.md)
-* [Testing and Playing with Kubernetes](docs/13-playing-with-k8s.md)
+* [Configuring storage for Persistent Volumes](docs/13-storage.md)
+* [Testing and Playing with Kubernetes](docs/20-playing-with-k8s.md)
 * [Verification and Troubleshooting](docs/98-commands.md)
 * [Notes from Troubleshooting and Operations](docs/99-scenario-notes.md)
 

@@ -296,3 +296,81 @@ kubectl apply -n monitoring -f manifests/lb-monitoring.yaml
 kubectl get pods  -n monitoring
 ```
 
+## Elasticsearch Operator
+
+https://github.com/upmc-enterprises/elasticsearch-operator
+
+### Installation
+
+```
+helm repo add es-operator https://raw.githubusercontent.com/upmc-enterprises/elasticsearch-operator/master/charts/
+helm install --name elasticsearch-operator es-operator/elasticsearch-operator --set rbac.enabled=True --namespace logging
+```
+
+Output
+
+```
+NAME:   elasticsearch-operator
+LAST DEPLOYED: Fri Aug  3 02:47:54 2018
+NAMESPACE: logging
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/ServiceAccount
+NAME                    SECRETS  AGE
+elasticsearch-operator  1        1s
+
+==> v1beta1/ClusterRole
+NAME                    AGE
+elasticsearch-operator  1s
+
+==> v1beta1/ClusterRoleBinding
+NAME                    AGE
+elasticsearch-operator  1s
+
+==> v1beta1/Deployment
+NAME                    DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+elasticsearch-operator  1        0        0           0          1s
+```
+
+```
+helm install --name=elasticsearch es-operator/elasticsearch --set kibana.enabled=True --set cerebro.enabled=True --namespace logging
+```
+
+Output
+
+```
+NAME:   elasticsearch
+LAST DEPLOYED: Fri Aug  3 02:48:36 2018
+NAMESPACE: logging
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/ElasticsearchCluster
+NAME                   AGE
+elasticsearch-cluster  0s
+
+
+NOTES:
+Creating Elasticsearch cluster...
+
+Client endpoints to access your cluster:
+ - https://elasticsearch-elasticsearch-cluster:9200
+ - https://elasticsearch:9200
+
+Cluster name: elasticsearch-cluster
+```
+
+### Verification
+
+```
+helm ls
+```
+
+Output
+
+```
+NAME                  	REVISION	UPDATED                 	STATUS  	CHART                       	NAMESPACE
+elasticsearch         	1       	Fri Aug  3 02:48:36 2018	DEPLOYED	elasticsearch-0.1.4         	logging
+elasticsearch-operator	1       	Fri Aug  3 02:47:54 2018	DEPLOYED	elasticsearch-operator-0.1.3	logging
+```
